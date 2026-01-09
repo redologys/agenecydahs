@@ -7,7 +7,8 @@ import {
   BarChart3, 
   CheckSquare, 
   Settings,
-  LogOut 
+  LogOut,
+  FolderOpen
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -16,6 +17,7 @@ const Sidebar = () => {
     { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
     { icon: Users, label: 'Clients', path: '/clients' },
     { icon: CheckSquare, label: 'Tasks', path: '/tasks' },
+    { icon: FolderOpen, label: 'Media Library', path: '/media' },
     { icon: BarChart3, label: 'Analytics', path: '/analytics' },
     { icon: Shield, label: 'Vault', path: '/vault' },
     { icon: Settings, label: 'Settings', path: '/settings' },

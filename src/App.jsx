@@ -5,6 +5,9 @@ import Clients from './pages/Clients';
 import Vault from './pages/Vault';
 import Tasks from './pages/Tasks';
 import Analytics from './pages/Analytics';
+import MediaLibrary from './pages/MediaLibrary';
+import MediaRequests from './pages/MediaRequests';
+import ClientMediaHub from './pages/ClientPortal/ClientMediaHub';
 import { VaultProvider } from './context/VaultContext';
 import { AuthProvider } from './context/AuthContext';
 import { AnalyticsProvider } from './context/AnalyticsContext';
@@ -36,6 +39,8 @@ function App() {
                   <Route path="clients" element={<Clients />} />
                   <Route path="clients/:clientId" element={<ClientDetail />} />
                   <Route path="tasks" element={<Tasks />} />
+                  <Route path="media" element={<MediaLibrary />} />
+                  <Route path="media/requests" element={<MediaRequests />} />
                   <Route path="analytics" element={<Analytics />} />
                   <Route path="vault" element={<Vault />} />
                   <Route path="settings" element={<Settings />} />
@@ -47,6 +52,7 @@ function App() {
                 <Route element={<ClientLayout />}>
                     <Route index element={<ClientDashboard />} />
                     <Route path="projects" element={<ClientProjects />} />
+                    <Route path="media" element={<ClientMediaHub />} />
                     <Route path="files" element={<ClientFiles />} />
                 </Route>
               </Route>

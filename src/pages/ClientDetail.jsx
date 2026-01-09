@@ -262,7 +262,7 @@ const ClientDetail = () => {
 
                  <div className="bg-white/5 p-4 rounded-xl border border-white/5 space-y-2">
                     <p className="text-xs font-bold text-primary uppercase">Quick Reference</p>
-                    <p className="text-xs text-text-muted">You can find this in your Google Analytics Admin panel under <strong>View Settings > View ID</strong>.</p>
+                    <p className="text-xs text-text-muted">You can find this in your Google Analytics Admin panel under <strong>View Settings &gt; View ID</strong>.</p>
                  </div>
 
                  <div className="flex gap-3 pt-4">

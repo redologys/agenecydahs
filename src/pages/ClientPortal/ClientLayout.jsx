@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, FileText, Settings, LogOut, CheckSquare } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, LogOut, CheckSquare, Image } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const ClientLayout = () => {
@@ -15,6 +15,7 @@ const ClientLayout = () => {
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/client-portal' },
     { icon: CheckSquare, label: 'Projects', path: '/client-portal/projects' },
+    { icon: Image, label: 'Media Library', path: '/client-portal/media' },
     { icon: FileText, label: 'Files', path: '/client-portal/files' },
   ];
 
