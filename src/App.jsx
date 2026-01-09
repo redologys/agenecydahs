@@ -7,6 +7,7 @@ import Tasks from './pages/Tasks';
 import Analytics from './pages/Analytics';
 import { VaultProvider } from './context/VaultContext';
 import { AuthProvider } from './context/AuthContext';
+import { AnalyticsProvider } from './context/AnalyticsContext';
 
 import ClientDetail from './pages/ClientDetail';
 import Settings from './components/Settings';
@@ -23,35 +24,37 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <VaultProvider>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            
-            {/* Admin Routes */}
-            <Route element={<ProtectedRoute role="admin" />}>
-              <Route path="/" element={<Layout />}>
-                <Route index element={<Dashboard />} />
-                <Route path="clients" element={<Clients />} />
-                <Route path="clients/:clientId" element={<ClientDetail />} />
-                <Route path="tasks" element={<Tasks />} />
-                <Route path="analytics" element={<Analytics />} />
-                <Route path="vault" element={<Vault />} />
-                <Route path="settings" element={<Settings />} />
+        <AnalyticsProvider>
+          <VaultProvider>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              
+              {/* Admin Routes */}
+              <Route element={<ProtectedRoute role="admin" />}>
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<Dashboard />} />
+                  <Route path="clients" element={<Clients />} />
+                  <Route path="clients/:clientId" element={<ClientDetail />} />
+                  <Route path="tasks" element={<Tasks />} />
+                  <Route path="analytics" element={<Analytics />} />
+                  <Route path="vault" element={<Vault />} />
+                  <Route path="settings" element={<Settings />} />
+                </Route>
               </Route>
-            </Route>
 
-            {/* Client Portal Routes */}
-            <Route path="/client-portal" element={<ProtectedRoute role="client" />}>
-               <Route element={<ClientLayout />}>
-                  <Route index element={<ClientDashboard />} />
-                  <Route path="projects" element={<ClientProjects />} />
-                  <Route path="files" element={<ClientFiles />} />
-               </Route>
-            </Route>
+              {/* Client Portal Routes */}
+              <Route path="/client-portal" element={<ProtectedRoute role="client" />}>
+                <Route element={<ClientLayout />}>
+                    <Route index element={<ClientDashboard />} />
+                    <Route path="projects" element={<ClientProjects />} />
+                    <Route path="files" element={<ClientFiles />} />
+                </Route>
+              </Route>
 
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </VaultProvider>
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </VaultProvider>
+        </AnalyticsProvider>
       </AuthProvider>
     </BrowserRouter>
   );

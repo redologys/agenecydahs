@@ -1,33 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend, PieChart, Pie, Cell } from 'recharts';
-import { Calendar, ArrowUpRight, ArrowDownRight, Download, SlidersHorizontal, Users, MousePointer, Clock } from 'lucide-react';
+import { Calendar, ArrowUpRight, ArrowDownRight, Download, SlidersHorizontal, Users, MousePointer, Clock, Loader2 } from 'lucide-react';
+import { useAnalytics } from '../context/AnalyticsContext';
+import { format, subDays, startOfDay } from 'date-fns';
 
 const COLORS = ['#D4AF37', '#1a1f2e', '#4B5563', '#9CA3AF'];
-
-// Mock Data
-const trafficData = [
-  { name: 'Mon', organic: 4000, paid: 2400 },
-  { name: 'Tue', organic: 3000, paid: 1398 },
-  { name: 'Wed', organic: 2000, paid: 9800 },
-  { name: 'Thu', organic: 2780, paid: 3908 },
-  { name: 'Fri', organic: 1890, paid: 4800 },
-  { name: 'Sat', organic: 2390, paid: 3800 },
-  { name: 'Sun', organic: 3490, paid: 4300 },
-];
-
-const sourceData = [
-  { name: 'Google', value: 400 },
-  { name: 'Social', value: 300 },
-  { name: 'Direct', value: 300 },
-  { name: 'Email', value: 200 },
-];
-
-const clientPerformance = [
-  { id: 1, name: 'TechStart', clicks: '24.5k', ctr: '3.2%', conv: '2.1%', cost: '$4,200', trend: 'up' },
-  { id: 2, name: 'Green Earth', clicks: '12.2k', ctr: '1.8%', conv: '1.5%', cost: '$1,800', trend: 'down' },
-  { id: 3, name: 'Fashion Fwd', clicks: '45.1k', ctr: '4.5%', conv: '3.8%', cost: '$8,500', trend: 'up' },
-  { id: 4, name: 'Urban Eats', clicks: '8.4k', ctr: '2.1%', conv: '1.2%', cost: '$900', trend: 'up' },
-];
 
 const StatBox = ({ label, value, change, icon: Icon, isNegative }) => (
   <div className="glass-card p-4 flex flex-col justify-between h-32">
@@ -35,9 +12,11 @@ const StatBox = ({ label, value, change, icon: Icon, isNegative }) => (
       <div className="p-2 rounded-lg bg-white/5 text-text-secondary">
         <Icon size={20} />
       </div>
-      <span className={`flex items-center text-xs font-bold ${isNegative ? 'text-red-400' : 'text-green-400'} bg-black/20 px-2 py-1 rounded-full`}>
-        {change} {isNegative ? <ArrowDownRight size={12} /> : <ArrowUpRight size={12} />}
-      </span>
+      {change && (
+        <span className={`flex items-center text-xs font-bold ${isNegative ? 'text-red-400' : 'text-green-400'} bg-black/20 px-2 py-1 rounded-full`}>
+          {change} {isNegative ? <ArrowDownRight size={12} /> : <ArrowUpRight size={12} />}
+        </span>
+      )}
     </div>
     <div>
       <h3 className="text-2xl font-bold text-white mb-1">{value}</h3>
@@ -48,6 +27,34 @@ const StatBox = ({ label, value, change, icon: Icon, isNegative }) => (
 
 const Analytics = () => {
   const [dateRange, setDateRange] = useState('7d');
+  const { analyticsData, loading, fetchAnalytics } = useAnalytics();
+
+  useEffect(() => {
+    const days = parseInt(dateRange);
+    const end = new Date();
+    const start = subDays(end, days);
+    
+    fetchAnalytics(null, format(start, 'yyyy-MM-dd'), format(end, 'yyyy-MM-dd'));
+  }, [dateRange]);
+
+  // Aggregate stats from data
+  const totalVisitors = analyticsData.reduce((sum, day) => sum + (day.visitors || 0), 0);
+  const totalPageViews = analyticsData.reduce((sum, day) => sum + (day.page_views || 0), 0);
+  
+  // Transform data for charts
+  const chartData = analyticsData.map(day => ({
+    name: format(new Date(day.date), 'MMM dd'),
+    visitors: day.visitors,
+    page_views: day.page_views
+  }));
+
+  if (loading && analyticsData.length === 0) {
+    return (
+      <div className="h-[600px] w-full flex items-center justify-center text-primary">
+        <Loader2 size={48} className="animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 pb-6">
@@ -82,10 +89,10 @@ const Analytics = () => {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatBox label="Total Visitors" value="142,384" change="+12%" icon={Users} />
-        <StatBox label="Avg. Session" value="4m 32s" change="+5%" icon={Clock} />
-        <StatBox label="Bounce Rate" value="42.3%" change="-2%" icon={MousePointer} isNegative /> 
-        <StatBox label="Conversion Rate" value="3.8%" change="+1.2%" icon={SlidersHorizontal} />
+        <StatBox label="Total Visitors" value={totalVisitors.toLocaleString()} change="+12%" icon={Users} />
+        <StatBox label="Total Page Views" value={totalPageViews.toLocaleString()} change="+5%" icon={Clock} />
+        <StatBox label="Avg. Daily Visitors" value={Math.round(totalVisitors / (chartData.length || 1)).toLocaleString()} change="-2%" icon={MousePointer} isNegative /> 
+        <StatBox label="Active Clients" value="12" change="+1.2%" icon={SlidersHorizontal} />
       </div>
 
       {/* Main Charts */}
@@ -94,33 +101,37 @@ const Analytics = () => {
            <div className="flex justify-between items-center mb-6">
               <h3 className="text-lg font-bold text-white">Traffic Overview</h3>
               <div className="flex items-center gap-2">
-                 <span className="flex items-center gap-1 text-xs text-text-secondary"><div className="w-2 h-2 rounded-full bg-[#D4AF37]" /> Organic</span>
-                 <span className="flex items-center gap-1 text-xs text-text-secondary"><div className="w-2 h-2 rounded-full bg-[#D4AF37]/30" /> Paid</span>
+                 <span className="flex items-center gap-1 text-xs text-text-secondary"><div className="w-2 h-2 rounded-full bg-[#D4AF37]" /> Visitors</span>
+                 <span className="flex items-center gap-1 text-xs text-text-secondary"><div className="w-2 h-2 rounded-full bg-[#8884d8]" /> Page Views</span>
               </div>
            </div>
            <div className="h-[320px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                 <AreaChart data={trafficData}>
-                    <defs>
-                       <linearGradient id="colorOrganic" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#D4AF37" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#D4AF37" stopOpacity={0}/>
-                       </linearGradient>
-                       <linearGradient id="colorPaid" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#8884d8" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
-                       </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                    <XAxis dataKey="name" stroke="#6B7280" tick={{fill: '#6B7280', fontSize: 12}} tickLine={false} axisLine={false} />
-                    <YAxis stroke="#6B7280" tick={{fill: '#6B7280', fontSize: 12}} tickLine={false} axisLine={false} />
-                    <Tooltip 
-                       contentStyle={{ backgroundColor: '#1a1f2e', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px' }}
-                       itemStyle={{ color: '#fff' }}
-                    />
-                    <Area type="monotone" dataKey="organic" stroke="#D4AF37" strokeWidth={3} fillOpacity={1} fill="url(#colorOrganic)" />
-                    <Area type="monotone" dataKey="paid" stroke="#8884d8" strokeWidth={3} fillOpacity={1} fill="url(#colorPaid)" />
-                 </AreaChart>
+                 {chartData.length > 0 ? (
+                   <AreaChart data={chartData}>
+                      <defs>
+                         <linearGradient id="colorVisitors" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#D4AF37" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#D4AF37" stopOpacity={0}/>
+                         </linearGradient>
+                         <linearGradient id="colorPageViews" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
+                         </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                      <XAxis dataKey="name" stroke="#6B7280" tick={{fill: '#6B7280', fontSize: 12}} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#6B7280" tick={{fill: '#6B7280', fontSize: 12}} tickLine={false} axisLine={false} />
+                      <Tooltip 
+                         contentStyle={{ backgroundColor: '#1a1f2e', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px' }}
+                         itemStyle={{ color: '#fff' }}
+                      />
+                      <Area type="monotone" dataKey="visitors" stroke="#D4AF37" strokeWidth={3} fillOpacity={1} fill="url(#colorVisitors)" />
+                      <Area type="monotone" dataKey="page_views" stroke="#8884d8" strokeWidth={3} fillOpacity={1} fill="url(#colorPageViews)" />
+                   </AreaChart>
+                 ) : (
+                   <div className="h-full w-full flex items-center justify-center text-text-muted">No data for selected range</div>
+                 )}
               </ResponsiveContainer>
            </div>
         </div>
