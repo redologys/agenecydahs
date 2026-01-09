@@ -1,10 +1,16 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
+import CommandPalette from '../ui/CommandPalette';
+import VaultModal from '../ui/VaultModal';
 
 const Layout = () => {
   return (
     <div className="min-h-screen bg-background relative overflow-x-hidden flex">
+      {/* Global Modals */}
+      <CommandPalette />
+      <VaultModal />
+
       {/* Background Ambience */}
       <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-0">
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px]" />

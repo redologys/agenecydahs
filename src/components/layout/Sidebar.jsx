@@ -61,20 +61,22 @@ const Sidebar = () => {
         ))}
       </nav>
 
-      {/* Footer / Need Help? */}
-      <div className="p-4 mx-4 mb-4 rounded-xl bg-gradient-to-br from-primary/20 to-transparent border border-primary/20">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 rounded-full bg-primary/20 text-primary">
-            <Shield size={16} />
+      {/* User Profile */}
+      <div className="p-4 border-t border-white/5 bg-[#0b0f19]/30">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-primary to-purple-500 p-[2px]">
+            <div className="w-full h-full rounded-full bg-black flex items-center justify-center overflow-hidden">
+               <img src="https://ui-avatars.com/api/?name=Admin+User&background=0D8ABC&color=fff" alt="User" />
+            </div>
           </div>
-          <p className="text-xs font-semibold text-white">Need Help?</p>
+          <div className="flex-1 overflow-hidden">
+             <h4 className="text-sm font-bold text-white truncate">Admin User</h4>
+             <p className="text-xs text-text-secondary truncate">admin@agency.com</p>
+          </div>
+          <button className="text-text-secondary hover:text-white transition-colors">
+            <Settings size={16} />
+          </button>
         </div>
-        <p className="text-[10px] text-text-secondary leading-relaxed mb-3">
-          Check our docs or contact support for assistance.
-        </p>
-        <button className="w-full py-1.5 text-xs font-bold text-black bg-primary rounded-lg hover:bg-primary-hover transition-colors">
-          DOCUMENTATION
-        </button>
       </div>
     </aside>
   );
