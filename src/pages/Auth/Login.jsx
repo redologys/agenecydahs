@@ -20,8 +20,7 @@ const Login = () => {
 
     try {
       await login(email, password);
-      // Login successful, redirect handled by App state or here
-      navigate('/');
+      // Let App.jsx / ProtectedRoute handle the redirect based on session state
     } catch (err) {
       setError(err.message || "Failed to sign in");
     } finally {

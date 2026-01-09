@@ -26,6 +26,8 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (err) {
       console.error('Profile fetch error:', err);
+    } finally {
+      if (loading) setLoading(false);
     }
   };
 
