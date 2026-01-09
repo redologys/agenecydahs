@@ -1,55 +1,52 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap');
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  body {
-    @apply bg-background text-text-primary font-sans antialiased selection:bg-primary/30 selection:text-primary;
-  }
+@theme {
+  --color-background: #0b0f19;
+  --color-background-card: #1a1f2e;
+  --color-background-glass: rgba(26, 31, 46, 0.6);
   
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-display tracking-tight;
-  }
+  --color-primary: #FFD700;
+  --color-primary-hover: #E5C100;
+  
+  --color-text-primary: #F9FAFB;
+  --color-text-secondary: #9CA3AF;
+  --color-text-muted: #6B7280;
+  
+  --font-display: 'Outfit', sans-serif;
+  --font-sans: 'Inter', sans-serif;
 }
 
 @layer components {
-  /* Cards with subtle glass effect */
   .glass-card {
-    @apply bg-background-card/60 backdrop-blur-xl border border-white/5 shadow-2xl rounded-2xl;
+    @apply bg-background-card/60 backdrop-blur-xl border border-white/5 shadow-xl rounded-2xl;
   }
   
-  /* Inputs */
-  .input-field {
-    @apply w-full bg-background-card border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all duration-300;
+  .glass-panel {
+    @apply bg-background-card/40 backdrop-blur-md border border-white/5;
   }
 
-  /* Buttons */
+  .input-field {
+    @apply w-full bg-[#0b0f19]/50 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all text-white placeholder-text-muted;
+  }
+
   .btn {
-    @apply px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2 transform active:scale-95;
+    @apply px-4 py-2 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer;
   }
 
   .btn-primary {
-    @apply bg-primary text-[#05070a] shadow-[0_0_20px_rgba(255,215,0,0.2)] hover:shadow-[0_0_30px_rgba(255,215,0,0.4)] hover:bg-primary-hover hover:-translate-y-0.5;
+    @apply bg-primary hover:bg-primary-hover text-black shadow-lg shadow-primary/25 hover:shadow-primary/40;
   }
 
   .btn-ghost {
-    @apply text-text-secondary hover:text-white hover:bg-white/5;
+    @apply hover:bg-white/5 text-text-secondary hover:text-white;
   }
   
-  /* Sidebar Links */
   .sidebar-link {
-    @apply flex items-center gap-3 px-4 py-3 mx-2 rounded-xl text-text-secondary hover:text-white hover:bg-white/5 transition-all duration-200 text-sm font-medium;
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-text-secondary hover:text-white hover:bg-white/5 transition-all text-sm font-medium;
   }
   
   .sidebar-link.active {
-    @apply bg-gradient-to-r from-primary/10 to-transparent text-primary border-l-2 border-primary shadow-[inset_10px_0_20px_-10px_rgba(255,215,0,0.1)];
-  }
-
-  /* Text Highlight */
-  .text-glow {
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    @apply bg-gradient-to-r from-primary/10 to-transparent text-primary border-l-2 border-primary;
   }
 }
 
@@ -58,12 +55,12 @@
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #05070a;
+  background: #0b0f19;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1a1d24;
+  background: #1f2937;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2a2d35;
+  background: #374151;
 }

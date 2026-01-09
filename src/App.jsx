@@ -1,13 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
+import Dashboard from './pages/Dashboard';
 import Clients from './pages/Clients';
 import Vault from './pages/Vault';
-
-function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
 import Tasks from './pages/Tasks';
 import Analytics from './pages/Analytics';
 
