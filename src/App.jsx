@@ -16,6 +16,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 // Client Portal
 import ClientLayout from './pages/ClientPortal/ClientLayout';
 import ClientDashboard from './pages/ClientPortal/ClientDashboard';
+import ClientProjects from './pages/ClientPortal/ClientProjects';
+import ClientFiles from './pages/ClientPortal/ClientFiles';
 
 function App() {
   return (
@@ -42,8 +44,8 @@ function App() {
             <Route path="/client-portal" element={<ProtectedRoute role="client" />}>
                <Route element={<ClientLayout />}>
                   <Route index element={<ClientDashboard />} />
-                  <Route path="projects" element={<div className="p-10 text-white">Projects List (Coming Soon)</div>} />
-                  <Route path="files" element={<div className="p-10 text-white">Files (Coming Soon)</div>} />
+                  <Route path="projects" element={<ClientProjects />} />
+                  <Route path="files" element={<ClientFiles />} />
                </Route>
             </Route>
 
